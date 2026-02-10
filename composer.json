@@ -1,0 +1,21 @@
+{
+  "name": "nexadev/ecommerce-block",
+  "description": "Gutenberg ecommerce blocks",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "autoload": {
+    "psr-4": {
+      "EcommerceBlock\\": "inc/",
+      "EcommerceBlocks\\": "addons/"
+    }
+  },
+  "authors": [
+    {
+      "name": "NexaDev"
+    }
+  ],
+  "require": {},
+  "require-dev": {
+    "symfony/var-dumper": "^7.2"
+  }
+}

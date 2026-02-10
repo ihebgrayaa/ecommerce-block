@@ -1,0 +1,26 @@
+.commercekit-wrap .ck-blocks-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.ck-block-card {
+    width: 220px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    padding: 14px;
+    background: #fff;
+    transition: box-shadow .2s ease;
+}
+
+.ck-block-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.ck-block-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
