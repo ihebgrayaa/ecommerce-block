@@ -4,13 +4,42 @@ namespace EcommerceBlock;
 
 use Exception;
 
+/**
+ * Class Kernel
+ *
+ * Acts as the main bootstrap and orchestration layer for the CommerceKit blocks system.
+ *
+ * Responsibilities include:
+ * - Bootstrapping plugin hooks
+ * - Dynamically registering active blocks
+ * - Managing the admin UI for enabling/disabling blocks
+ * - Enqueuing admin-specific assets
+ *
+ * @package EcommerceBlock
+ */
 class Kernel
 {
+    /**
+     * Option key used to store active blocks configuration.
+     *
+     * @var string
+     */
     const OPTION_KEY = 'commercekit_active_blocks';
 
     /* -------------------------------------------------------------------------
      * BOOT
      * ---------------------------------------------------------------------- */
+
+    /**
+     * Boot the CommerceKit plugin.
+     *
+     * Registers WordPress hooks required to:
+     * - Initialize blocks
+     * - Register admin menus
+     * - Load admin assets
+     *
+     * @return void
+     */
     public static function boot(): void
     {
         add_action('init', [self::class, 'registerBlocks'], 10);
@@ -21,6 +50,19 @@ class Kernel
     /* -------------------------------------------------------------------------
      * REGISTER BLOCKS
      * ---------------------------------------------------------------------- */
+
+    /**
+     * Register active Gutenberg blocks.
+     *
+     * Dynamically scans the addons directory, checks which blocks
+     * are enabled in plugin settings, and registers them if their
+     * corresponding class exists.
+     *
+     * Block classes must follow the convention:
+     * \EcommerceBlocks\{BlockSlug}\{BlockSlug}
+     *
+     * @return void
+     */
     public static function registerBlocks(): void
     {
         $active = get_option(self::OPTION_KEY, []);
@@ -47,6 +89,15 @@ class Kernel
     /* -------------------------------------------------------------------------
      * ADMIN MENU
      * ---------------------------------------------------------------------- */
+
+    /**
+     * Register the CommerceKit admin menu.
+     *
+     * Adds a top-level menu and a submenu for managing
+     * Gutenberg blocks activation.
+     *
+     * @return void
+     */
     public static function registerAdminMenu(): void
     {
         add_menu_page(
@@ -72,6 +123,17 @@ class Kernel
     /* -------------------------------------------------------------------------
      * ADMIN ASSETS
      * ---------------------------------------------------------------------- */
+
+    /**
+     * Enqueue admin assets for CommerceKit pages.
+     *
+     * Loads styles only on the blocks management page
+     * to avoid unnecessary asset usage.
+     *
+     * @param string $hook Current admin page hook suffix.
+     *
+     * @return void
+     */
     public static function enqueueAdminAssets($hook): void
     {
         if (!str_contains($hook, 'commercekit-blocks')) return;
@@ -87,6 +149,17 @@ class Kernel
     /* -------------------------------------------------------------------------
      * BLOCKS PAGE (FLEX UI)
      * ---------------------------------------------------------------------- */
+
+    /**
+     * Render the blocks management admin page.
+     *
+     * Displays a list of available blocks with toggle switches
+     * allowing administrators to enable or disable blocks.
+     *
+     * Changes are persisted using WordPress options.
+     *
+     * @return void
+     */
     public static function renderBlocksPage(): void
     {
         if (isset($_POST['commercekit_save'])) {
@@ -131,6 +204,15 @@ class Kernel
     /* -------------------------------------------------------------------------
      * HELPERS
      * ---------------------------------------------------------------------- */
+
+    /**
+     * Retrieve all available block addons.
+     *
+     * Scans the addons directory and returns a list of
+     * block slugs mapped to human-readable labels.
+     *
+     * @return array<string, string> List of block slugs and labels.
+     */
     private static function getAvailableBlocks(): array
     {
         $blocks = [];
